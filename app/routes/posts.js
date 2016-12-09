@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { Route } = Ember;
+const { Route, RSVP: { all } } = Ember;
 
 export default Route.extend({
     queryParams: {
