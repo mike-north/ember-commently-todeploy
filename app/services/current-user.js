@@ -1,11 +1,15 @@
 import Ember from 'ember';
 
-const { Service, inject } = Ember;
+const { Service, inject, RSVP: { resolve } } = Ember;
 
 export default Service.extend({
     store: inject.service(),
     loadUserInfo() {
-        return this.get('store').peekRecord('user', 'current') ||
-            this.get('store').findRecord('user', 'current');
+        let cached = this.get('store').peekRecord('user', 'current');
+        let p = cached ? resolve(cached) : this.get('store').findRecord('user', 'current');
+        return p.then((usr) => {
+            this.set('user', usr);
+            return usr;
+        });
     }
 });
